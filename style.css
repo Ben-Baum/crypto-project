@@ -1,0 +1,188 @@
+body {
+  background-image: url("img/bitcoin-btc-crypto-1140x600.png");
+}
+
+
+#parallax {
+  margin: 10%;
+  background-image: url("img/cryptocurrency-Nuthawut-adobe.jpeg");
+  min-height: 200px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#navbar {
+  height: 100px;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Nabla', cursive;
+  font-size: 100px;
+  color: rgb(210, 242, 231);
+}
+
+.card {
+  margin-left: 3%;
+  Display: inline-block;
+  margin-right: 40px;
+  margin-bottom: 10px;
+  width: 180px;
+}
+
+.card>img {
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+}
+
+.moreInfo {
+  display: none;
+}
+
+.loader {
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #adadad;
+  width: 10px;
+  height: 10px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-left: 120px;
+  margin-top: 5px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 5px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #57fb4c;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #80ff00;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.padding{
+  padding-left: 100px;
+}
+
+.header{
+  color: white;
+  margin-top: 100px;
+  font-size: xx-large;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.paragrph{
+  color: white;
+  font-size: large;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.notChoose{
+  background-color: red;
+}
+
+.myPhoto > img{
+  position: absolute;
+  height: 500px;
+  width: 300px;
+  margin-left: 900px;
+  margin-top: 100px;
+}
+
+.report > img{
+  position: relative;
+  width: 100%;
+  margin-top: 100px;
+}
+
+.modal{
+  height: 300px;
+  width: 300px;
+  display: none;
+  background-color: white;
+  position: fixed;
+  z-index: 1000px;
+  left: 30%;
+  top: 30%;
+  border: red 2px solid;
+}
+
+.chosenCardName{
+  left: 80%;
+}
+
+.chosenCard{
+  height: 40px;
+  width: 80px;
+  display: block;
+  padding-bottom: 50px;
+}
+
+.noResult{
+  text-align: center;
+  margin-left: 30%;
+  background-color: white;
+  color: red;
+  border-radius: 20%;
+  height: 100px;
+  width: 300px;
+}
+
+.noResult > p {
+  size: x-large;
+  padding-top: 10%;
+}
