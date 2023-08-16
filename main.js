@@ -2,6 +2,7 @@
 
 (async () => {
   let chooseds = [];
+  let cryptos = [];
   const coins = await getCrypto();
   displayCrypto(coins);
 
@@ -24,19 +25,21 @@
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <input id="searchCoin" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       </form>
     </div>
   </div>
 </nav>
 <h1>crypto site</h1>`);
 
-  const searchCoin = document.getElementById(`searchCoin`);
-  searchCoin.addEventListener('input', async function () {
-    const searchValue = searchCoin.value;
-    const data = await getJson("api.json");
-    if (searchValue) {
-      const result = data.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1);
+  const searchInput = document.getElementById(`searchInput`);
+  searchInput.addEventListener('input', srarchCrypto)
+
+  async function srarchCrypto() {
+    const searchValue = searchInput.value;
+    if (searchValue && searchValue.length > 2) {
+      const result = cryptos.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1);
+      console.log(result)
       if (result.length === 0) {
         $("#parallax").empty();
         $("#parallax").append(`
@@ -49,15 +52,17 @@
     }
 
     if (searchValue === "") {
+      const coins = cryptos;
       $("#parallax").empty();
-      displayCrypto(data);
+      displayCrypto(coins);
     }
 
-  })
+  }
 
   async function getCrypto() {
-    const json = await getJson("api.json");
-    return json
+    cryptos = await getJson("api.json");
+    displayCrypto(cryptos)
+    return cryptos
   }
 
   async function getCryptoPrices(id) {
@@ -74,7 +79,7 @@
 
 
   function displayCrypto(crypto) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < crypto.length; i++) {
       $("#parallax").append(`
    <div class="card" id="${crypto[i]?.id}">
    <label class="switch">
@@ -90,10 +95,14 @@
   <div class="moreInfo" >
 </div>
 </div>
-`)
+`
+      )
+
     };
 
-    document.addEventListener('click', function () {
+      
+
+    document.addEventListener('click', function (event) {
       if (event.target.classList.contains('slider')) {
         const card = event.target.closest('.card');
         const index = chooseds.findIndex(item => item.id === card.id);
@@ -101,92 +110,88 @@
         if (index === -1 && chooseds.length < 5) {
           const cryptoItem = crypto.find(item => item.id === card.id);
           chooseds.push(cryptoItem);
+          console.log(chooseds)
           card.classList.add('chosen');
-        } else if (index !== -1) {
-          chooseds.splice(index, 1);
-          card.classList.remove('chosen');
         } else if (chooseds.length > 4) {
-          document.addEventListener('click', function (event) {
-            if (event.target.classList.contains('slider')) {
-              const card = event.target.closest('.chosenCard');
-              const cardId = card.getAttribute('id');
-              const index = chooseds.indexOf(cardId);
-
-              if (index === -1 && chooseds.length < 5) {
-                chooseds.push(cardId);
-                card.classList.add('chosen');
-              } else if (index !== -1) {
-                chooseds.splice(index, 1);
-                card.classList.remove('chosen');
+          displayModal();
+        }
+        
+      
+          
+            function displayModal() {
+              const modal = document.querySelector('.modal');
+              const modalBody = document.getElementById('modalBody');
+              modalBody.innerHTML = `
+                <h3>The limit is 5 coins top</h3>
+                <h6>Please remove one of the coins from the list below</h6>
+              `;
+          
+              for (let i = 0; i < chooseds.length; i++) {
+                const cardId = chooseds[i].id;
+                const cryptoItem = crypto.find(item => item.id === cardId);
+          
+                const containerClass = 'chosenCard card chosen';
+          
+                modalBody.innerHTML += `
+                  <div class="${containerClass}" id="${cryptoItem?.id}">
+                    <label class="switch">
+                      <input type="checkbox" checked>
+                      <span class="slider round"></span>
+                    </label>
+                    <div>
+                      <p class="chosenCardName">${cryptoItem.name}</p>
+                    </div>
+                  </div>
+                `;
               }
+          
+              modalBody.innerHTML += `
+                <button class="btn btn-secondary closeModal">Close</button>
+                <button class="btn btn-primary" id="saveModal">Save</button>
+              `;
+          
+              modal.style.display = 'block';
+              $(".parallax").css("color","rgb(121, 121, 121)") 
+          
+              const closeButton = modal.querySelector('.closeModal');
+              closeButton.addEventListener('click', function () {
+                modal.style.display = 'none';
+                $(".parallax").removeClass('dark');
+              });
             }
-          });
-
-          const modal = document.querySelector('.modal');
-          const modalBody = document.getElementById('modalBody');
-          modalBody.innerHTML = '';
-          modalBody.innerHTML += `
-            <h3>the limit is 5 coins top</h3>
-            <h6>please remove one of the coin from the list below</h6>
-            `;
-
-          for (let i = 0; i < chooseds.length; i++) {
-            const cardId = chooseds[i].id;
-            const cryptoItem = crypto.find(item => item.id === cardId);
-
-            const containerClass = 'chosenCard card chosen';
-
-            modalBody.innerHTML += `
-              <div class="${containerClass}" id="${cryptoItem?.id}">
-                <label class="switch">
-                  <input type="checkbox" checked>
-                  <span class="slider round"></span>
-                </label>
-                <div>
-                  <p class="chosenCardName">${cryptoItem.name}</p>
-                </div>
-              </div>
-            `;
-          }
-
-          modalBody.innerHTML += `
-          <button class="btn btn-secondary closeModal">Close</button>
-        `;
+          
 
         
-          modal.style.display = 'block';
-          $(".parallax").addClass('dark');
-
-          const closeButton = modal.querySelector('.closeModal');
-  closeButton.addEventListener('click', function () {
-    modal.style.display = 'none';
-    $(".parallax").removeClass('dark');
-  });
-        }
       }
     });
 
 
     document.querySelectorAll('.btn').forEach(function (btn) {
-      btn.addEventListener('click', async function (event) {
+      btn.addEventListener('click', async function () {
         event.preventDefault();
+        const card = this.closest('.card');
         const moreInfo = this.closest('.card').querySelector('.moreInfo');
 
-        if (moreInfo.style.display === 'none' || moreInfo.innerHTML.trim() === '') {
+        if (moreInfo.style.display === 'none') {
           const loader = document.createElement('div');
           loader.className = 'loader';
           this.appendChild(loader);
 
-          const cardId = this.closest('.card').id;
+          const cardId = card.id;
+          let sessionData = getFromSessionStorge(cardId)
           try {
-            const cryptoApi = await getCryptoPrices(cardId);
-            moreInfo.innerHTML = `
-          <p>price in USD: ${cryptoApi.market_data.current_price.usd}$</p>
-          <p>price in EUR: ${cryptoApi.market_data.current_price.eur}€</p>
-          <p>price in NIS: ${cryptoApi.market_data.current_price.ils}₪</p>
-        `;
-            saveToSessionStorage(cardId, moreInfo);
-            getFromSessionStorge(cardId);
+            if(!sessionData){
+              const cryptoApi = await getCryptoPrices(cardId);
+              moreInfo.innerHTML = `
+            <p>price in USD: ${cryptoApi.market_data.current_price.usd}$</p>
+            <p>price in EUR: ${cryptoApi.market_data.current_price.eur}€</p>
+            <p>price in NIS: ${cryptoApi.market_data.current_price.ils}₪</p>
+          `;
+              saveToSessionStorage(cardId, moreInfo);
+            }else{
+              moreInfo.innerHTML = sessionData;
+
+            }
             moreInfo.style.display = 'block';
           } catch (error) {
             moreInfo.innerHTML = `

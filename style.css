@@ -186,3 +186,7 @@ input:checked + .slider:before {
   size: x-large;
   padding-top: 10%;
 }
+
+.daek{
+  color: rgb(121, 121, 121);
+}
